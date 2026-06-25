@@ -1,54 +1,58 @@
-{% extends "system_template.html" %}
-{% block content %}
-<div class="content_area d-flex flex-column align-items-center no-select no-right-click">
-  <h2>音声が再生中です</h2>
-  <p>（音声を注意深く聞いて、指示にしたがってください）</p>
-  <audio id="audio_element" preload="auto">
-    <source src="/static/audio/1_introduction.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
-  </audio>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>想像と体験に関する研究 - 音声1</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5 text-center">
+  <div class="content_area my-5 p-4 border rounded bg-light">
+    <h2>音声が再生中です</h2>
+    <p class="text-muted">（音声を注意深く聞いて、指示にしたがってください）</p>
+    
+    <audio id="audio_element" preload="auto">
+      <source src="audio/1_introduction.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <div class="form_area d-flex flex-column align-items-center">
+    <form action="1_exp02_audio_2.html" method="GET" id="form" novalidate>
+      <button type="submit" id="skip_button" class="btn btn-secondary btn-lg mb-3">SKIP</button>
+    </form>
+    <button id="replay_button" class="btn btn-primary btn-lg" style="display:none;">音声を再生</button>
+  </div>
 </div>
 
-
-<div class="form_area d-flex flex-column align-items-center">
-  <form action="/process" method="post" id="form" novalidate>
-      {% if display_skip_button %}<button type="submit" class="btn btn-primary btn-lg custom-button"">SKIP</button>{% endif %}
-      <button type="submit" class="btn btn-primary btn-lg custom-button" style="display:none;"></button>
-      <input type="hidden" name="source" value="{{ page_name }}"> <!-- do not delete this -->
-  </form>
-  <button id="replay_button" class="btn btn-primary btn-lg custom-button" style="display:none;">音声を再生</button>
-</div>
-{% endblock %}
-
-
-
-{% block custom_end_of_body_area %}
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/relay.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    {% if display_skip_button %}focusFirstRequiredElement(false);{% endif %}
-
-    var replayButton = document.getElementById('replay_button');
     var audioElement = document.getElementById('audio_element');
-    var reloaded = sessionStorage.getItem('{{ page_name }}_reloaded');
+    var replayButton = document.getElementById('replay_button');
+    var form = document.getElementById('form');
+
+    // 1. 自動再生の実行
+    var playPromise = audioElement.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function(error) {
+        // 自動再生がブロックされた場合は再生ボタンを表示
+        replayButton.style.display = 'block';
+      });
+    }
 
     replayButton.addEventListener('click', function() {
       audioElement.play();
+      replayButton.style.display = 'none';
     });
 
-    autoPlayAudio('form', true).then(function() {
-        // Audio played successfully
-        console.log("Audio played successfully");
-    }).catch(function(error) {
-        // Auto-play was prevented or failed
-        var replayButton = document.getElementById('replay_button');
-        replayButton.style.display = 'block';
+    // 2. 音声が最後まで再生し終わったら自動で次のステップへ進む
+    audioElement.addEventListener('ended', function() {
+      form.submit();
     });
-
-    if (reloaded) {
-      replayButton.style.display = 'block';
-    } 
   });
-  
-  trackPageReload("{{ page_name }}");
 </script>
-{% endblock %}
+</body>
+</html>
