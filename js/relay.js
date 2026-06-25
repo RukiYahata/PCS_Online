@@ -34,4 +34,24 @@ function getFormattedFormattedTime() {
     return `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
 }
 
-document.addEventListener("DOMContentLoaded", relayParameters);
+// すべてのイベントバインド（実行）をこの1つのDOMContentLoadedに集約します
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. パラメータの自動中継をここで実行（1回のみ）
+    relayParameters();
+
+    // 2. 0〜5、または「はい・いいえ」の未選択チェックを共通化して強制ストップ
+    const form = document.getElementById('form');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            const answerInput = document.getElementById('answer');
+            
+            // 隠しフィールド 'answer' がフォーム内に存在し、かつ値が空欄（未選択）の場合
+            if (answerInput && answerInput.value === "") {
+                event.preventDefault(); // 遷移を確実にストップ
+                event.stopPropagation();
+                alert("選択肢のいずれかをクリックして回答してください。");
+                return false;
+            }
+        });
+    }
+});
