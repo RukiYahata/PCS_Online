@@ -1,38 +1,41 @@
-{% extends "system_template.html" %}
-{% block content %}
-<div class="content_area d-flex flex-column align-items-center no-select no-right-click">
-  <p>この実験をはじめてから今までに起こったことを簡単に書き出してください。細部まで書く必要はありません。2分間で書き終えてください。時間がきたら自動的に次に進みます。</p>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>想像と体験に関する研究 - 記述1</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5 text-center">
+  <div class="content_area my-4 p-4 border rounded bg-light no-select">
+    <p class="fs-5 text-start lh-base">この実験をはじめてから今までに起こったことを簡単に書き出してください。細部まで書く必要はありません。2分間で書き終えてください。時間がきたら自動的に次に進みます。</p>
+  </div>
+
+  <div class="form_area w-100 d-flex flex-column align-items-center">
+    <form action="1_exp10_audio_8.html" method="GET" id="form" novalidate class="w-100">
+      <div class="mb-4 d-flex justify-content-center">
+        <textarea id="comments" name="memory1" rows="6" class="form-control w-70" required></textarea>
+      </div>
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary btn-lg px-5">次へ</button>
+      </div> 
+    </form>
+  </div>
 </div>
 
-
-<div class="form_area d-flex flex-column align-items-center">
-  <form action="/process" method="post" id="form" novalidate>
-    
-    <div class="custom_paragraph_area d-flex flex-column">
-      <textarea id="comments" name="comments1" rows="6" cols="70" required></textarea>
-    </div>
-
-    <div class="custom_paragraph_area">
-      <button type="submit" class="btn btn-primary btn-lg custom-button">次へ</button>
-      <input type="hidden" name="source" value="{{ page_name }}"> <!-- do not delete this -->
-    </div> 
-
-  </form>
-</div>
-{% endblock %}
-
-
-
-{% block custom_end_of_body_area %}
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/relay.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function(){
-    submitFormAfterTimeout('form', 120000);
-    focusFirstRequiredElement(true);
-  });
+    var form = document.getElementById('form');
+    // 2分（120000ms）で自動遷移
+    setTimeout(function() { form.submit(); }, 120000);
 
-  var form = document.getElementById('form');
-  form.addEventListener('submit', function(event){
-    validateRequiredFields(event, "この項目は必須です。");
+    form.addEventListener('submit', function(event){
+      validateRequiredFields(event, "内容を入力してください。");
+    });
   });
 </script>
-{% endblock %}
+</body>
+</html>
