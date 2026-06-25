@@ -12,26 +12,24 @@
   </style>
 </head>
 <body>
-<div class="container  mt-5">
+<div class="container mt-5">
   <div class="content_area d-flex flex-column align-items-center">
     <h1 class="no-select">「想像と体験に関する研究」</h1>
   </div>
 
   <div class="form_area mt-4 d-flex flex-column align-items-center">
     <form action="pages/0_pre01_consent_check.html" method="GET" id="form">
-      
       <div class="custom_paragraph_area text-center">
-        <h2 class="no-select">プロジェクトID</h2>
+        <h2>プロジェクトID</h2>
         <input type="text" class="form-control text-center shadow-sm" id="id" name="id" placeholder="プロジェクトIDを入力してください" required>
       </div>
-
+      
       <input type="hidden" id="startTime" name="startTime" value="">
 
+      <div class="custom_paragraph_area text-center mt-4">
+        <button type="submit" class="btn btn-primary btn-lg custom_button">開始する</button>
+      </div>
     </form>
-    
-    <div class="custom_paragraph_area text-center mt-4">
-      <button type="submit" class="btn btn-primary btn-lg custom_button">開始する</button>
-    </div>
   </div>
 </div>
 
@@ -42,16 +40,16 @@
   document.getElementById('form').addEventListener('submit', function(event) {
     const idInput = document.getElementById('id');
 
-    // JavaScript側でも重ねて二重に空欄チェックを行います
+    // 1. スペースのみの入力を JavaScript 側で厳格に弾く
     if (!idInput.value.trim()) {
-      event.preventDefault(); // 次のページへの遷移を確実にストップ
+      event.preventDefault(); // 遷移を確実にストップ
       alert("プロジェクトIDを入力してください。");
       idInput.focus();
       return;
     }
-      // 実験開始時間を記録
-      document.getElementById('startTime').value = getFormattedFormattedTime();
-    });
+
+    // 2. 正しく入力されている場合のみ開始時間を記録して遷移を許可
+    document.getElementById('startTime').value = getFormattedFormattedTime();
   });
 </script>
 </body>
