@@ -1,11 +1,10 @@
-// URLパラメータを解析して現在のフォームにhidden要素としてすべて埋め込む関数
+// URLパラメータを解析して現在のフォームにhidden要素としてすべて埋め込む
 function relayParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     const form = document.getElementById('form');
     if (!form) return;
 
     urlParams.forEach((value, key) => {
-        // すでにフォームに存在する同名のフィールドはスキップ（最新の入力を優先するため）
         if (!form.querySelector(`[name="${key}"]`)) {
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
