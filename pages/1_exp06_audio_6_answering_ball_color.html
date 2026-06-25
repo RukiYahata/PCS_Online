@@ -1,64 +1,49 @@
-{% extends "system_template.html" %}
-{% block content %}
-<div class="content_area d-flex flex-column align-items-center no-select no-right-click">
-  <h2>ボールの色を入力してください。</h2>
-  <p>ボールの色を入力し終えたら、「完了」を押してください。</p>
-  <audio id="audio_element" preload="auto">
-    <source src="/static/audio/6_vision_input.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
-  </audio>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>想像と体験に関する研究 - ボール色入力</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5 text-center">
+  <div class="content_area my-5 p-4 border rounded bg-light no-select">
+    <h2>ボールの色を入力してください。</h2>
+    <p>ボールの色を入力し終えたら、「完了」を押してください。</p>
+    <audio id="audio_element" preload="auto">
+      <source src="audio/6_vision_input.mp3" type="audio/mp3">
+    </audio>
+  </div>
+
+  <div class="form_area d-flex flex-column align-items-center">
+    <form action="1_exp07_audio_7.html" method="GET" id="form" novalidate>
+      <div class="custom_paragraph_area mb-3">
+        <input type="text" id="ball_color" name="ballColor" class="form-control text-center" required>
+      </div>
+      <div class="custom_paragraph_area">
+        <button type="submit" class="btn btn-primary btn-lg px-5">完了</button>
+      </div>  
+    </form>
+    <button id="replay_button" class="btn btn-primary btn-lg mt-3" style="display:none;">音声を再生</button>
+  </div>
 </div>
 
-
-<div class="form_area d-flex flex-column align-items-center">
-  <form action="/process" method="post" id="form" novalidate>
-    <div class="custom_paragraph_area">
-      <input type="text" id="ball_color" name="ball_color" required>
-    </div>
-    <div class="custom_paragraph_area">
-      <button type="submit" class="btn btn-primary btn-lg custom-button">完了</button>
-      <input type="hidden" name="source" value="{{ page_name }}"> <!-- do not delete this -->
-    </div>  
-  </form>
-  <button id="replay_button" class="btn btn-primary btn-lg custom-button" style="display:none;">音声を再生</button>
-</div>
-{% endblock %}
-
-
-
-{% block custom_end_of_body_area %}
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/relay.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    focusFirstRequiredElement(true)
-
-    var replayButton = document.getElementById('replay_button');
     var audioElement = document.getElementById('audio_element');
-    var reloaded = sessionStorage.getItem('{{ page_name }}_reloaded');
-
-    replayButton.addEventListener('click', function() {
-      audioElement.play();
-    });
-
-    autoPlayAudio('form', false).then(function() {
-        // Audio played successfully
-        console.log("Audio played successfully");
-    }).catch(function(error) {
-        // Auto-play was prevented or failed
-        var replayButton = document.getElementById('replay_button');
-        replayButton.style.display = 'block';
-    });
-
-    if (reloaded) {
-      replayButton.style.display = 'block';
-    } 
-
+    var replayButton = document.getElementById('replay_button');
     var form = document.getElementById('form');
-    form.addEventListener('submit', function(event){
-      validateRequiredFields(event, "この項目は必須です。");
-    });
 
+    audioElement.play().catch(function() { replayButton.style.display = 'block'; });
+    replayButton.addEventListener('click', function() { audioElement.play(); });
+
+    form.addEventListener('submit', function(event){
+      validateRequiredFields(event, "ボールの色を入力してください。");
+    });
   });
-  
-  trackPageReload("{{ page_name }}");
 </script>
-{% endblock %}
+</body>
+</html>
