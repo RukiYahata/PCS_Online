@@ -1,26 +1,34 @@
-{% extends "system_template.html" %}
-{% block content %}
-<div class="content_area d-flex flex-column align-items-center no-select no-right-click">
-  <p>（お待ち下さい）</p>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>想像と体験に関する研究 - お待ちください</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5 text-center">
+  <div class="content_area my-5 p-5 border rounded bg-light no-select">
+    <p class="fs-4">（お待ち下さい）</p>
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div class="form_area d-flex justify-content-center">
+    <form action="1_exp09_answering_experience1.html" method="GET" id="form" novalidate>
+      <button type="submit" id="skip_button" class="btn btn-secondary btn-lg">SKIP</button>
+    </form>
+  </div>
 </div>
 
-
-<div class="form_area d-flex flex-column align-items-center">
-  <form action="/process" method="post" id="form" novalidate>
-      {% if display_skip_button %}<button type="submit" class="btn btn-primary btn-lg custom-button"">SKIP</button>{% endif %}
-      <button type="submit" class="btn btn-primary btn-lg custom-button" style="display:none;"></button>
-      <input type="hidden" name="source" value="{{ page_name }}"> <!-- do not delete this -->
-  </form>
-</div>
-{% endblock %}
-
-
-{% block custom_end_of_body_area %}
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/relay.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    submitFormAfterTimeout('form', 10000);
-    autoPlayAudio(true);
-    {% if display_skip_button %}focusFirstRequiredElement(false);{% endif %}
+    // 10秒（10000ms）経過後に自動送信
+    setTimeout(function() {
+      document.getElementById('form').submit();
+    }, 10000);
   });
 </script>
-{% endblock %}
+</body>
+</html>
