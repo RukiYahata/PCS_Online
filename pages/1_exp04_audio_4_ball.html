@@ -1,52 +1,57 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <title>想像と体験に関する研究 - ボール選択</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>想像と体験に関する研究 - ボール選択</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
 </head>
+
 <body>
-<div class="container mt-5 text-center">
-  <div class="content_area my-4 p-3 border rounded bg-white">
-    <audio id="audio_element" preload="auto">
-      <source src="audio/4_vision_ball.mp3" type="audio/mp3">
+    <div class="container mt-5 text-center">
+        <div class="content_area my-4 p-3 border rounded bg-white">
+            <audio id="audio_element" preload="auto">
+      <source src="../audio/4_vision_ball.mp3" type="audio/mp3">
     </audio>
-    <div class="mb-4">
-      <img src="img/three_balls_pc.png" class="img-fluid" alt="3つのボール">
+            <div class="mb-4">
+                <img src="../img/three_balls_pc.png" class="img-fluid" alt="3つのボール">
+            </div>
+        </div>
+
+        <div class="form_area d-flex flex-column align-items-center">
+            <form action="1_exp05_audio_5.html" method="GET" id="form" novalidate>
+                <button type="submit" id="skip_button" class="btn btn-secondary btn-lg mb-3">SKIP</button>
+            </form>
+            <button id="replay_button" class="btn btn-primary btn-lg" style="display:none;">音声を再生</button>
+        </div>
     </div>
-  </div>
 
-  <div class="form_area d-flex flex-column align-items-center">
-    <form action="1_exp05_audio_5.html" method="GET" id="form" novalidate>
-      <button type="submit" id="skip_button" class="btn btn-secondary btn-lg mb-3">SKIP</button>
-    </form>
-    <button id="replay_button" class="btn btn-primary btn-lg" style="display:none;">音声を再生</button>
-  </div>
-</div>
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/relay.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var audioElement = document.getElementById('audio_element');
+            var replayButton = document.getElementById('replay_button');
+            var form = document.getElementById('form');
 
-<script src="js/jquery-3.7.1.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/relay.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var audioElement = document.getElementById('audio_element');
-    var replayButton = document.getElementById('replay_button');
-    var form = document.getElementById('form');
+            var playPromise = audioElement.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function() {
+                    replayButton.style.display = 'block';
+                });
+            }
 
-    var playPromise = audioElement.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(function() { replayButton.style.display = 'block'; });
-    }
+            replayButton.addEventListener('click', function() {
+                audioElement.play();
+                replayButton.style.display = 'none';
+            });
 
-    replayButton.addEventListener('click', function() {
-      audioElement.play();
-      replayButton.style.display = 'none';
-    });
-
-    audioElement.addEventListener('ended', function() {
-      form.submit();
-    });
-  });
-</script>
+            audioElement.addEventListener('ended', function() {
+                form.submit();
+            });
+        });
+    </script>
 </body>
+
 </html>
