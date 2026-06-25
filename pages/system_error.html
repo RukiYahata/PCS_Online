@@ -1,7 +1,17 @@
-{% extends "system_template.html" %}
-{% block content %}
-<div class="content_area">
-  <h1 class="custom-text-attention">エラー</h1> 
-  <p class="custom_paragraph_area custom_text_error_message">{{ error_message }}</p>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>想像と体験に関する研究 - エラー</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5 text-center">
+  <div class="content_area p-5 border rounded bg-white mt-5 shadow-sm">
+    <h1 class="text-danger mb-4">エラー</h1> 
+    <p class="fs-5 text-muted">不正な画面遷移、またはセッションの有効期限が切れました。</p>
+    <a href="0_pre00_index.html" class="btn btn-secondary mt-3">トップページへ戻る</a>
+  </div>
 </div>
-{% endblock %}
+</body>
+</html>
