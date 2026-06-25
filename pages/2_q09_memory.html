@@ -1,66 +1,72 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <title>想像と体験に関する研究 - Q9</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <style>
-    .rating-btn { width: 50px; margin: 0 5px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>想像と体験に関する研究 - Q9</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <style>
+        .rating-btn {
+            width: 50px;
+            margin: 0 5px;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container mt-5 text-center">
-  <div class="content_area my-4 p-4 border rounded bg-light text-start no-select lh-base">
-    <h2>次に、「あなたは全てを思い出すことができます」と言われるまで、実験中に行ったことは何も思い出せないと言われました。</h2>
-    <p class="text-muted mt-2">「あなたは全てを思い出すことができます」と言われるまで、どの程度、この出来事を思い出すことが難しかったですか？0から5までの尺度でお答えください。0は普段と同じように簡単に思い出すことができたことを意味し、5はまるで記憶に空白があるかのように、思い出すのが非常に困難だったことを意味します。</p>
-  </div>
-
-  <div class="form_area d-flex flex-column align-items-center">
-    <form action="2_q10a_space_bar.html" method="GET" id="form" novalidate>
-   
-      <div class="p-3 border rounded bg-white mb-4">
-        <h4 class="mb-3">あなたの体験に対応する数字を選択してください</h4>
-        <div class="rating-buttons d-flex justify-content-center align-items-center">
-          <span class="me-3 no-select">普通に覚えていた</span>
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="0">0</button>
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="1">1</button>
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="2">2</button>
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="3">3</button>
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="4">4</button>
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="5">5</button>
-          <span class="ms-3 no-select">全く記憶なし</span>
+    <div class="container mt-5 text-center">
+        <div class="content_area my-4 p-4 border rounded bg-light text-start no-select lh-base">
+            <h2>次に、「あなたは全てを思い出すことができます」と言われるまで、実験中に行ったことは何も思い出せないと言われました。</h2>
+            <p class="text-muted mt-2">「あなたは全てを思い出すことができます」と言われるまで、どの程度、この出来事を思い出すことが難しかったですか？0から5までの尺度でお答えください。0は普段と同じように簡単に思い出すことができたことを意味し、5はまるで記憶に空白があるかのように、思い出すのが非常に困難だったことを意味します。</p>
         </div>
-        <input type="hidden" name="q9" id="answer" required>
-      </div>
 
-      <div class="custom_paragraph_area">
-        <button type="submit" class="btn btn-primary btn-lg px-5">次へ</button>
-      </div>
-  
-    </form>
-  </div>
-</div>
+        <div class="form_area d-flex flex-column align-items-center">
+            <form action="2_q10a_space_bar.html" method="GET" id="form" novalidate>
 
-<script src="js/jquery-3.7.1.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/relay.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const buttons = document.querySelectorAll('.rating-btn');
-    const hiddenInput = document.getElementById('answer');
+                <div class="p-3 border rounded bg-white mb-4">
+                    <h4 class="mb-3">あなたの体験に対応する数字を選択してください</h4>
+                    <div class="rating-buttons d-flex justify-content-center align-items-center">
+                        <span class="me-3 no-select">普通に覚えていた</span>
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="0">0</button>
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="1">1</button>
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="2">2</button>
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="3">3</button>
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="4">4</button>
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="5">5</button>
+                        <span class="ms-3 no-select">全く記憶なし</span>
+                    </div>
+                    <input type="hidden" name="q9" id="answer" required>
+                </div>
 
-    buttons.forEach(button => {
-      button.addEventListener('click', function() {
-        buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
-        this.classList.replace('btn-outline-primary', 'btn-primary');
-        hiddenInput.value = this.getAttribute('data-value');
-      });
-    });
+                <div class="custom_paragraph_area">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">次へ</button>
+                </div>
 
-    document.getElementById('form').addEventListener('submit', function(event) {
-      validateRequiredFields(event, "0から5のいずれかの数字を選択してください。");
-    });
-  });
-</script>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/relay.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const buttons = document.querySelectorAll('.rating-btn');
+            const hiddenInput = document.getElementById('answer');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+                    this.classList.replace('btn-outline-primary', 'btn-primary');
+                    hiddenInput.value = this.getAttribute('data-value');
+                });
+            });
+
+            document.getElementById('form').addEventListener('submit', function(event) {
+                validateRequiredFields(event, "0から5のいずれかの数字を選択してください。");
+            });
+        });
+    </script>
 </body>
+
 </html>

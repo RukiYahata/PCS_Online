@@ -1,68 +1,74 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <title>想像と体験に関する研究 - Q11</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <style>
-    .rating-btn { width: 100px; margin: 0 10px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>想像と体験に関する研究 - Q11</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <style>
+        .rating-btn {
+            width: 100px;
+            margin: 0 10px;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container mt-5 text-center">
-  <div class="content_area my-5 p-4 border rounded bg-light no-select">
-    <h2>本日の実験の中で、両腕を前に伸ばして手のひらを向かい合わせにするよう指示しました。その際に、実際にそのように体を動かしましたか？</h2>
-  </div>
-
-  <div class="form_area d-flex flex-column align-items-center">
-    <form action="2_q12_closing_eyes.html" method="GET" id="form" novalidate>
-
-      <div class="p-3 border rounded bg-white mb-4">
-        <div class="rating-buttons d-flex justify-content-center align-items-center">
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="いいえ">いいえ</button>
-          <button type="button" class="btn btn-outline-primary rating-btn" data-value="はい">はい</button>
+    <div class="container mt-5 text-center">
+        <div class="content_area my-5 p-4 border rounded bg-light no-select">
+            <h2>本日の実験の中で、両腕を前に伸ばして手のひらを向かい合わせにするよう指示しました。その際に、実際にそのように体を動かしましたか？</h2>
         </div>
-        <input type="hidden" name="q11" id="answer" required>
-      </div>
 
-      <div class="custom_paragraph_area">
-        <button type="submit" class="btn btn-primary btn-lg px-5">次へ</button>
-      </div>
-    </form>
-  </div>
-</div>
+        <div class="form_area d-flex flex-column align-items-center">
+            <form action="2_q12_closing_eyes.html" method="GET" id="form" novalidate>
 
-<script src="js/jquery-3.7.1.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/relay.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const buttons = document.querySelectorAll('.rating-btn');
-    const hiddenInput = document.getElementById('answer');
+                <div class="p-3 border rounded bg-white mb-4">
+                    <div class="rating-buttons d-flex justify-content-center align-items-center">
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="いいえ">いいえ</button>
+                        <button type="button" class="btn btn-outline-primary rating-btn" data-value="はい">はい</button>
+                    </div>
+                    <input type="hidden" name="q11" id="answer" required>
+                </div>
 
-    buttons.forEach(button => {
-      button.addEventListener('click', function() {
-        buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
-        this.classList.replace('btn-outline-primary', 'btn-primary');
-        hiddenInput.value = this.getAttribute('data-value');
-      });
-    });
+                <div class="custom_paragraph_area">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">次へ</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    // キーボードの「はい(Y) / いいえ(N)」ショートカットを再現
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'y' || event.key === 'Y') {
-        const btn = document.querySelector('.rating-btn[data-value="はい"]');
-        if(btn) btn.click();
-      } else if (event.key === 'n' || event.key === 'N') {
-        const btn = document.querySelector('.rating-btn[data-value="いいえ"]');
-        if(btn) btn.click();
-      }
-    });
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/relay.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const buttons = document.querySelectorAll('.rating-btn');
+            const hiddenInput = document.getElementById('answer');
 
-    document.getElementById('form').addEventListener('submit', function(event) {
-      validateRequiredFields(event, "「はい」または「いいえ」を選択してください。");
-    });
-  });
-</script>
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+                    this.classList.replace('btn-outline-primary', 'btn-primary');
+                    hiddenInput.value = this.getAttribute('data-value');
+                });
+            });
+
+            // キーボードの「はい(Y) / いいえ(N)」ショートカットを再現
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'y' || event.key === 'Y') {
+                    const btn = document.querySelector('.rating-btn[data-value="はい"]');
+                    if (btn) btn.click();
+                } else if (event.key === 'n' || event.key === 'N') {
+                    const btn = document.querySelector('.rating-btn[data-value="いいえ"]');
+                    if (btn) btn.click();
+                }
+            });
+
+            document.getElementById('form').addEventListener('submit', function(event) {
+                validateRequiredFields(event, "「はい」または「いいえ」を選択してください。");
+            });
+        });
+    </script>
 </body>
+
 </html>
