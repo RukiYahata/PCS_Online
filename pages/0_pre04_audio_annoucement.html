@@ -1,27 +1,28 @@
-{% extends "system_template.html" %}
-{% block content %}
-<div class="content_area d-flex flex-column align-items-center no-select no-right-click">
-  <p>まもなく音声による指示が再生されます。</p>
-  <h2>音声を注意深く聞いて、指示に従ってください。</h2>
-  <p>「次へ」を押すと音声が始まります。</p>
-  <p>（音声が始まるまで、少し時間がかかることがあります。）</p>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>想像と体験に関する研究 - 音声案内</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5 text-center">
+  <div class="content_area my-5 p-4 border rounded">
+    <p class="fs-5">まもなく音声による指示が再生されます。</p>
+    <h2 class="text-danger my-4">音声を注意深く聞いて、指示に従ってください。</h2>
+    <p class="fs-5">「次へ」を押すと音声が始まります。</p>
+    <p class="text-muted">（音声が始まるまで、少し時間がかかることがあります。）</p>
+  </div>
+
+  <div class="form_area d-flex justify-content-center">
+    <form action="1_exp01_audio_1.html" method="GET" id="form" novalidate>
+      <button type="submit" class="btn btn-primary btn-lg px-5">次へ</button>
+    </form>
+  </div>
 </div>
 
-
-<div class="form_area d-flex flex-column align-items-center">
-  <form action="/process" method="post" id="form" novalidate>
-      <button type="submit" class="btn btn-primary btn-lg custom-button">次へ</button>
-      <input type="hidden" name="source" value="{{ page_name }}"> <!-- do not delete this -->
-  </form>
-</div>
-{% endblock %}
-
-
-
-{% block custom_end_of_body_area %}
-<script>
-  document.addEventListener("DOMContentLoaded", function(){
-    focusFirstRequiredElement(false);
-  });
-</script>
-{% endblock %}
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/relay.js"></script>
+</body>
+</html>
