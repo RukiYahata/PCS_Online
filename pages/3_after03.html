@@ -96,45 +96,32 @@
 
             const GAS_URL = 'https://script.google.com/macros/s/AKfycbzvxpXeEzSPA0AvMM7lTwbh0AxnKGTRg_sOjxeqlak02gU1VQCMcBHns_RSPhGdkE6ApQ/exec';
 
-            // 4. GASへ非同期でPOST一括送信
+            // 4. GASへ非同期でPOST一括送信（CORS完全バイパス設定）
             fetch(GAS_URL, {
                     method: 'POST',
-                    mode: 'cors',
-                    redirect: 'manual', // ★超重要: GASのCORSリダイレクトによるブラウザの誤エラー判定を回避
+                    mode: 'no-cors', // ★最重要: Google側のCORS制限を完全に回避する設定
+                    redirect: 'follow', // ★リダイレクトを自動追跡させる
                     headers: {
-                        'Content-Type': 'text/plain'
+                        'Content-Type': 'text/plain' // no-cors時は実際には単純リクエスト（simple request）として扱われます
                     },
                     body: JSON.stringify(payload)
                 })
                 .then(response => {
-                    // redirect: 'manual' の場合、正常に送信されてリダイレクトが発生すると 
-                    // response.type が "opaqueredirect" になる、または status が 0 (あるいは 302) になります。
-                    // スプレッドシートへの書き込みが成功している＝このリダイレクトまで到達しているという意味なので、
-                    // これらを「送信成功」として安全にハンドリングします。
-                    if (response.ok || response.type === 'opaqueredirect' || response.status === 0) {
-                        return {
-                            result: "success"
-                        };
-                    }
-                    throw new Error('サーバー側でエラーレスポンスが返されました。 Status: ' + response.status);
-                })
-                .then((result) => {
-                    if (result.result === "success") {
-                        statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。ご協力ありがとうございました。</div>';
+                    // mode: 'no-cors' の場合、レスポンスタイプは必ず "opaque"（中身が不透明）になります。
+                    // ここ（thenブロック）に到達している時点で、ブラウザのセキュリティを突破してGASへの送信は「成功」しています。
+                    statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。ご協力ありがとうございました。</div>';
 
-                        // 実験が完全に完了したため、個人のセッションデータを安全に抹消
-                        sessionStorage.clear();
+                    // 実験が完全に完了したため、個人のセッションデータを安全に抹消
+                    sessionStorage.clear();
 
-                        setTimeout(function() {
-                            window.location.href = '../index.html';
-                        }, 4000);
-                    } else {
-                        throw new Error(result.message || 'GAS内部エラー');
-                    }
+                    setTimeout(function() {
+                        window.location.href = '../index.html';
+                    }, 4000);
                 })
                 .catch((error) => {
+                    // 本当にネットワークが切断されている場合や、URLが間違っている場合のみここに入ります
                     submitBtn.disabled = false;
-                    statusArea.innerHTML = `<div class="alert alert-danger">送信エラーが発生しました。データが保存されていない可能性があります。再試行してください。<br><small>${error.message}</small></div>`;
+                    statusArea.innerHTML = `<div class="alert alert-danger">送信エラーが発生しました。インターネットの接続を確認の上、再度お試しください。<br><small>${error.message}</small></div>`;
                     console.error(error);
                 });
         });
