@@ -9,21 +9,20 @@
 
 <body>
     <div class="container mt-5 text-center">
-        <div class="content_area my-5 p-4 border rounded bg-light">
+        <div class="content_area d-flex flex-column align-items-center no-select no-right-click">
             <h2>音声が再生中です</h2>
-            <p class="text-muted">（音声を注意深く聞いて、指示にしたがってください）</p>
+            <p>（音声を注意深く聞いて、指示にしたがってください）</p>
 
             <audio id="audio_element" preload="auto">
       <source src="../audio/1_introduction.mp3" type="audio/mp3">
       Your browser does not support the audio element.
     </audio>
         </div>
-
         <div class="form_area d-flex flex-column align-items-center">
             <form action="1_exp02_audio_2.html" method="GET" id="form" novalidate>
-                <button type="submit" id="skip_button" class="btn btn-secondary btn-lg mb-3">SKIP</button>
+                <button type="submit" id="skip_button" class="btn btn-primary btn-lg custom-button">SKIP</button>
             </form>
-            <button id="replay_button" class="btn btn-primary btn-lg" style="display:none;">音声を再生</button>
+            <button id="replay_button" class="btn btn-primary btn-lg custom-button" style="display:none;">音声を再生</button>
         </div>
     </div>
 
