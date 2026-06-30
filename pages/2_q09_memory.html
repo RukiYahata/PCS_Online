@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>想像と体験に関する研究 - Q9</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/system.css">
     <style>
         .rating-btn {
             width: 50px;
@@ -46,22 +47,29 @@
         </div>
     </div>
 
+    <script src="../js/system.js"></script>
     <script src="../js/jquery-3.7.1.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/relay.js"></script>
     <script>
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     const buttons = document.querySelectorAll('.rating-btn');
+        //     const hiddenInput = document.getElementById('answer');
+
+        //     buttons.forEach(button => {
+        //         button.addEventListener('click', function() {
+        //             buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+        //             this.classList.replace('btn-outline-primary', 'btn-primary');
+        //             hiddenInput.value = this.getAttribute('data-value');
+        //         });
+        //     });
+
+        //     document.getElementById('form').addEventListener('submit', function(event) {
+        //         validateRequiredFields(event, "0から5のいずれかの数字を選択してください。");
+        //     });
+        // });
         document.addEventListener("DOMContentLoaded", function() {
-            const buttons = document.querySelectorAll('.rating-btn');
-            const hiddenInput = document.getElementById('answer');
-
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
-                    this.classList.replace('btn-outline-primary', 'btn-primary');
-                    hiddenInput.value = this.getAttribute('data-value');
-                });
-            });
-
+            handleRatingButtonClick('form', '.rating-btn', 'answer');
             document.getElementById('form').addEventListener('submit', function(event) {
                 validateRequiredFields(event, "0から5のいずれかの数字を選択してください。");
             });

@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <title>想像と体験に関する研究 - ボール色入力</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/system.css">
 </head>
 
 <body>
     <div class="container mt-5 text-center">
-        <div class="content_area my-5 p-4 border rounded bg-light no-select">
+        <div class="content_area d-flex flex-column align-items-center no-select no-right-click">
             <h2>ボールの色を入力してください。</h2>
             <p>ボールの色を入力し終えたら、「完了」を押してください。</p>
             <audio id="audio_element" preload="auto">
@@ -19,17 +20,18 @@
 
         <div class="form_area d-flex flex-column align-items-center">
             <form action="1_exp07_audio_7.html" method="GET" id="form" novalidate>
-                <div class="custom_paragraph_area mb-3">
+                <div class="custom_paragraph_area">
                     <input type="text" id="ball_color" name="ballColor" class="form-control text-center" required>
                 </div>
                 <div class="custom_paragraph_area">
-                    <button type="submit" class="btn btn-primary btn-lg px-5">完了</button>
+                    <button type="submit" class="btn btn-primary btn-lg custom-button">完了</button>
                 </div>
             </form>
-            <button id="replay_button" class="btn btn-primary btn-lg mt-3" style="display:none;">音声を再生</button>
+            <button id="replay_button" class="btn btn-primary btn-lg custom-button" style="display:none;">音声を再生</button>
         </div>
     </div>
 
+    <script src="../js/system.js"></script>
     <script src="../js/jquery-3.7.1.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/relay.js"></script>

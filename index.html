@@ -1,56 +1,73 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>想像と体験に関する研究 - 開始</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <style>
-    .no-select { user-select: none; }
-    .custom_button { min-width: 150px; }
-    .custom_paragraph_area { margin-bottom: 20px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>想像と体験に関する研究 - 開始</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/system.css">
+    <style>
+        .no-select {
+            user-select: none;
+        }
+        
+        .custom_button {
+            min-width: 150px;
+        }
+        
+        .custom_paragraph_area {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container mt-5">
-  <div class="content_area d-flex flex-column align-items-center">
-    <h1 class="no-select">「想像と体験に関する研究」</h1>
-  </div>
+    <div class="container mt-5">
+        <div class="content_area d-flex flex-column align-items-center">
+            <h1 class="no-select">「想像と体験に関する研究」</h1>
+        </div>
 
-  <div class="form_area mt-4 d-flex flex-column align-items-center">
-    <form action="pages/0_pre01_consent_check.html" method="GET" id="form">
-      <div class="custom_paragraph_area text-center">
-        <h2>プロジェクトID</h2>
-        <input type="text" class="form-control text-center shadow-sm" id="id" name="id" placeholder="プロジェクトIDを入力してください" required>
-      </div>
-      
-      <input type="hidden" id="startTime" name="startTime" value="">
+        <div class="form_area mt-4 d-flex flex-column align-items-center">
+            <form action="pages/0_pre01_consent_check.html" method="GET" id="form">
+                <div class="custom_paragraph_area">
+                    <h2 class="no-select no-right-click">プロジェクトID</h2>
+                    <input type="text" class="no-spin form-control text-center" id="id" name="id" required>
+                </div>
 
-      <div class="custom_paragraph_area text-center mt-4">
-        <button type="submit" class="btn btn-primary btn-lg custom_button">開始する</button>
-      </div>
-    </form>
-  </div>
-</div>
+                <input type="hidden" id="startTime" name="startTime" value="">
 
-<script src="js/jquery-3.7.1.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/relay.js"></script>
-<script>
-  document.getElementById('form').addEventListener('submit', function(event) {
-    const idInput = document.getElementById('id');
+                <div class="custom_paragraph_area">
+                    <button type="submit" class="btn btn-primary btn-lg custom_button">開始する</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    // 1. スペースのみや空欄の入力を厳格にブロック
-    if (!idInput.value.trim()) {
-      event.preventDefault(); 
-      alert("プロジェクトIDを入力してください。");
-      idInput.focus();
-      return;
-    }
+    <script src="js/system.js"></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/relay.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            focusFirstRequiredElement(false);
+        });
+        document.getElementById('form').addEventListener('submit', function(event) {
+            const idInput = document.getElementById('id');
 
-    // 2. 正常に入力されている場合、開始時間をセットしてそのまま標準のGET遷移を通す
-    document.getElementById('startTime').value = getFormattedFormattedTime();
-  });
-</script>
+            // 1. スペースのみや空欄の入力を厳格にブロック
+            // if (!idInput.value.trim()) {
+            //     event.preventDefault();
+            //     alert("プロジェクトIDを入力してください。");
+            //     idInput.focus();
+            //     return;
+            // }
+            if (!validateRequiredFields(event, "プロジェクトIDは必須です。")) return;
+
+            // 2. 正常に入力されている場合、開始時間をセットしてそのまま標準のGET遷移を通す
+            document.getElementById('startTime').value = getFormattedFormattedTime();
+        });
+    </script>
 </body>
+
 </html>
