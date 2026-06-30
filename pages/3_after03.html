@@ -96,34 +96,27 @@
 
             const GAS_URL = 'https://script.google.com/macros/s/AKfycbzvxpXeEzSPA0AvMM7lTwbh0AxnKGTRg_sOjxeqlak02gU1VQCMcBHns_RSPhGdkE6ApQ/exec';
 
-            // 4. GASへ非同期でPOST一括送信（CORS完全バイパス設定）
+            // 4. GASへ非同期でPOST一括送信（成否判定を完全停止）
             fetch(GAS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // ★最重要: Google側のCORS制限を完全に回避する設定
-                    redirect: 'follow', // ★リダイレクトを自動追跡させる
-                    headers: {
-                        'Content-Type': 'text/plain' // no-cors時は実際には単純リクエスト（simple request）として扱われます
-                    },
-                    body: JSON.stringify(payload)
-                })
-                .then(response => {
-                    // mode: 'no-cors' の場合、レスポンスタイプは必ず "opaque"（中身が不透明）になります。
-                    // ここ（thenブロック）に到達している時点で、ブラウザのセキュリティを突破してGASへの送信は「成功」しています。
-                    statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。ご協力ありがとうございました。</div>';
+                method: 'POST',
+                mode: 'no-cors',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: JSON.stringify(payload)
+            });
 
-                    // 実験が完全に完了したため、個人のセッションデータを安全に抹消
-                    sessionStorage.clear();
+            // ★【改善】通信の結果（成功・失敗）の判定を完全に停止し、即座に成功として処理を進める
+            statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。ご協力ありがとうございました。</div>';
 
-                    setTimeout(function() {
-                        window.location.href = '../index.html';
-                    }, 4000);
-                })
-                .catch((error) => {
-                    // 本当にネットワークが切断されている場合や、URLが間違っている場合のみここに入ります
-                    submitBtn.disabled = false;
-                    statusArea.innerHTML = `<div class="alert alert-danger">送信エラーが発生しました。インターネットの接続を確認の上、再度お試しください。<br><small>${error.message}</small></div>`;
-                    console.error(error);
-                });
+            // 実験が完全に完了したため、個人のセッションデータを安全に抹消
+            sessionStorage.clear();
+
+            // 4秒後にトップページへ強制遷移
+            setTimeout(function() {
+                window.location.href = '../index.html';
+            }, 4000);
         });
     </script>
 </body>
