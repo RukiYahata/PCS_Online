@@ -52,26 +52,34 @@
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/relay.js"></script>
     <script>
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     const buttons = document.querySelectorAll('.rating-btn');
-        //     const hiddenInput = document.getElementById('answer');
-
-        //     buttons.forEach(button => {
-        //         button.addEventListener('click', function() {
-        //             buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
-        //             this.classList.replace('btn-outline-primary', 'btn-primary');
-        //             hiddenInput.value = this.getAttribute('data-value');
-        //         });
-        //     });
-
-        //     document.getElementById('form').addEventListener('submit', function(event) {
-        //         validateRequiredFields(event, "0から5のいずれかの数字を選択してください。");
-        //     });
-        // });
         document.addEventListener("DOMContentLoaded", function() {
+            // 1. system.jsの関数を使って、ボタン選択（.selectedクラス追加とhiddenへの値セット）を有効化
             handleRatingButtonClick('form', '.rating-btn', 'answer');
+
+            // 2. 数字キー（0〜5）によるショートカットをシステム共通仕様に合わせて適用したい場合
+            document.addEventListener('keydown', function(event) {
+                if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
+                handleRatingKeydown(event, '.rating-btn', 'answer');
+            });
+
+            // 3. 送信処理の乗っ取り（GET送信の隠蔽化）
             document.getElementById('form').addEventListener('submit', function(event) {
-                validateRequiredFields(event, "0から5のいずれかの数字を選択してください。");
+                event.preventDefault(); // デフォルトのGET送信を強制ストップ
+
+                const hiddenInput = document.getElementById('answer');
+
+                // 必須チェック（未選択を弾く）
+                if (hiddenInput.value === '') {
+                    clearFormErrors();
+                    displayFormError(hiddenInput, "0から5のいずれかの数字を選択してください。", hiddenInput.parentNode);
+                    return;
+                }
+
+                // --- セキュリティ改善：尺度回答の値をセッションストレージに保存 ---
+                sessionStorage.setItem('q4b', hiddenInput.value);
+
+                // 次の尺度質問ページへ安全に遷移
+                window.location.href = "2_q05_stiffness_of_right_arm.html";
             });
         });
     </script>
