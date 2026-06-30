@@ -42,12 +42,31 @@
             submitBtn.disabled = true;
             statusArea.innerHTML = '<div class="alert alert-info">データを送信中です。そのままお待ちください...</div>';
 
-            // 1. URLのクエリパラメータから全ての蓄積データをオブジェクト化
-            const urlParams = new URLSearchParams(window.location.search);
-            const payload = {};
-            urlParams.forEach((value, key) => {
-                payload[key] = value;
-            });
+            // 1. セッションストレージから全ての蓄積データをオブジェクト化
+            const payload = {
+                id: sessionStorage.getItem('id') || "",
+                startTime: sessionStorage.getItem('startTime') || "",
+                user: sessionStorage.getItem('user') || "",
+                age: sessionStorage.getItem('age') || "",
+                gender: sessionStorage.getItem('gender') || "",
+                ballColor: sessionStorage.getItem('ballColor') || "",
+                memory1: sessionStorage.getItem('memory1') || "",
+                memory2: sessionStorage.getItem('memory2') || "",
+                q1: sessionStorage.getItem('q1') || "",
+                q2: sessionStorage.getItem('q2') || "",
+                q3: sessionStorage.getItem('q3') || "",
+                q4a: sessionStorage.getItem('q4a') || "",
+                q4b: sessionStorage.getItem('q4b') || "",
+                q5: sessionStorage.getItem('q5') || "",
+                q6: sessionStorage.getItem('q6') || "",
+                q7: sessionStorage.getItem('q7') || "",
+                q8: sessionStorage.getItem('q8') || "",
+                q9: sessionStorage.getItem('q9') || "",
+                q10a: sessionStorage.getItem('q10a') || "",
+                q10b: sessionStorage.getItem('q10b') || "",
+                q11: sessionStorage.getItem('q11') || "",
+                q12: sessionStorage.getItem('q12') || ""
+            };
 
             // 2. 実験の終了時間 (endTime) を記録
             const endTimeStr = getFormattedFormattedTime();
@@ -55,41 +74,61 @@
 
             // 3. 実験所要時間 (duration) を自動計算
             if (payload['startTime']) {
-                const start = new Date(payload['startTime'].replace(/-/g, '/'));
-                const end = new Date(endTimeStr.replace(/-/g, '/'));
+                // "yyyy-mm-dd hh:mm:ss" 形式から Date オブジェクトが作れない端末用セーフティパース
+                const startStr = payload['startTime'].indexOf('-') !== -1 ? payload['startTime'].replace(/-/g, '/') : payload['startTime'];
+                const endStr = endTimeStr.replace(/-/g, '/');
+
+                const start = new Date(startStr);
+                const end = new Date(endStr);
                 const diffMs = end - start;
 
-                const diffHrs = Math.floor(diffMs / 3600000);
-                const diffMins = Math.floor((diffMs % 3600000) / 60000);
-                const diffSecs = Math.floor((diffMs % 60000) / 1000);
-
-                payload['duration'] = `${diffHrs}:${String(diffMins).padStart(2, '0')}:${String(diffSecs).padStart(2, '0')}`;
+                if (!isNaN(diffMs)) {
+                    const diffHrs = Math.floor(diffMs / 3600000);
+                    const diffMins = Math.floor((diffMs % 3600000) / 60000);
+                    const diffSecs = Math.floor((diffMs % 60000) / 1000);
+                    payload['duration'] = `${diffHrs}:${String(diffMins).padStart(2, '0')}:${String(diffSecs).padStart(2, '0')}`;
+                } else {
+                    payload['duration'] = "0:00:00";
+                }
             } else {
                 payload['duration'] = "0:00:00";
             }
 
-            // ★ここに取得した「Google Apps Script」のウェブアプリURLを貼り付けます
             const GAS_URL = 'https://script.google.com/macros/s/AKfycbzvxpXeEzSPA0AvMM7lTwbh0AxnKGTRg_sOjxeqlak02gU1VQCMcBHns_RSPhGdkE6ApQ/exec';
 
             // 4. GASへ非同期でPOST一括送信
+            // CORS回避のため text/plain で送信（GAS側の doPost では問題なく JSON.parse 可能です）
             fetch(GAS_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // GitHub Pagesからのクロスドメイン通信を許可
+                    mode: 'cors',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'text/plain'
                     },
                     body: JSON.stringify(payload)
                 })
-                .then(() => {
-                    statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。まもなく開始画面へ自動的に戻ります。</div>';
-                    setTimeout(function() {
-                        // 動的なプロジェクトの最初のルートページ（index.html）へ強制帰還
-                        window.location.href = '../index.html';
-                    }, 4000);
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('サーバーエラーが発生しました。');
+                    }
+                    return response.json();
+                })
+                .then((result) => {
+                    if (result.result === "success") {
+                        statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。ご協力ありがとうございました。</div>';
+
+                        // 実験が完全に完了したため、個人のセッションデータを完全に破壊・消去
+                        sessionStorage.clear();
+
+                        setTimeout(function() {
+                            window.location.href = '../index.html';
+                        }, 4000);
+                    } else {
+                        throw new Error(result.message || 'GAS内部エラー');
+                    }
                 })
                 .catch((error) => {
                     submitBtn.disabled = false;
-                    statusArea.innerHTML = '<div class="alert alert-danger">送信エラーが発生しました。インターネット接続を確認の上、再度お試しください。</div>';
+                    statusArea.innerHTML = `<div class="alert alert-danger">送信エラーが発生しました。研究実施者に連絡するか、再度お試しください。<br><small>${error.message}</small></div>`;
                     console.error(error);
                 });
         });

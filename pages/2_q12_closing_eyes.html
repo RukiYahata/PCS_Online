@@ -44,19 +44,33 @@
     <script src="../js/relay.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. ボタンのクリック、選択時の色変更(selected追加)、隠しインプットへの代入を1発で有効化
+            // 1. system.jsの関数でボタン選択と値のセットを有効化
             handleRatingButtonClick('form', '.rating-btn', 'answer');
 
-            // 2. システム共通の「1:はい / 0:いいえ」キーボードショートカットを有効化
+            // 2. システム共通キーボードショートカットを有効化
             document.addEventListener('keydown', function(event) {
-                // 他の入力欄（もしあれば）での誤作動防止ガード
                 if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
-
                 handleYesNoKeydown(event, '.rating-btn', 'answer');
             });
 
+            // 3. 送信イベントをフックし、sessionStorageへ隠蔽保存して遷移
             document.getElementById('form').addEventListener('submit', function(event) {
-                validateRequiredFields(event, "「はい」または「いいえ」を選択してください。");
+                event.preventDefault(); // GET送信（URL露出）をストップ
+
+                const hiddenInput = document.getElementById('answer');
+
+                // バリデーション実行
+                if (hiddenInput.value === '') {
+                    clearFormErrors();
+                    displayFormError(hiddenInput, "「はい」または「いいえ」を選択してください。", hiddenInput.parentNode);
+                    return;
+                }
+
+                // --- 安全にセッションストレージへ格納 ---
+                sessionStorage.setItem('q12', hiddenInput.value);
+
+                // パラメータなしで次の質問へ安全に遷移
+                window.location.href = "3_after01.html";
             });
         });
     </script>

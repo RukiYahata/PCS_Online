@@ -67,7 +67,42 @@
     <script src="../js/relay.js"></script>
     <script>
         document.getElementById('form').addEventListener('submit', function(event) {
-            validateRequiredFields(event, "すべての項目に入力・選択をしてください。");
+            event.preventDefault(); // デフォルトのGET送信を強制ストップ
+
+            // ラジオボタン等、必須項目のチェック
+            // system.jsの標準バリデーションは、内部で最終的にform.submit()（GET遷移）を呼んでしまうため、
+            // 独自に有効チェックを行った上で、ストレージへの保存処理に回します。
+            const userField = document.getElementById('user');
+            const ageField = document.getElementById('age');
+            const selectedGender = document.querySelector('input[name="gender"]:checked');
+
+            clearFormErrors();
+
+            let isValid = true;
+            if (!userField.value.trim()) {
+                displayFormError(userField, "ユーザーIDを入力してください。", userField.parentNode);
+                isValid = false;
+            }
+            if (!ageField.value || ageField.value < 0 || ageField.value > 120) {
+                displayFormError(ageField, "正しい年齢を入力してください。", ageField.parentNode);
+                isValid = false;
+            }
+            if (!selectedGender) {
+                // 性別ラジオボタンの親要素にエラーを出す
+                const genderContainer = document.querySelector('input[name="gender"]').parentNode.parentNode;
+                displayFormError(genderContainer, "性別を選択してください。", genderContainer);
+                isValid = false;
+            }
+
+            if (!isValid) return; // バリデーションエラーがあれば遷移をストップ
+
+            // --- セキュリティ改善：各値を個別にメモリに隠蔽保存 ---
+            sessionStorage.setItem('user', userField.value.trim());
+            sessionStorage.setItem('age', ageField.value);
+            sessionStorage.setItem('gender', selectedGender.value);
+
+            // 次のページへ安全に遷移
+            window.location.href = "0_pre03_headphone_confirmination.html";
         });
     </script>
 </body>

@@ -33,13 +33,31 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var form = document.getElementById('form');
-            // 2分（120000ms）で自動遷移
+            var textarea = document.getElementById('comments');
+
+            // データをストレージに保存して安全に画面遷移させる共通処理
+            function saveAndNavigate() {
+                // 自動遷移時のために、空欄だった場合は空文字をセット
+                sessionStorage.setItem('memory1', textarea.value);
+                window.location.href = "1_exp10_audio_8.html";
+            }
+
+            // 1. 2分（120000ms）が来たら無条件で安全に自動遷移
             setTimeout(function() {
-                form.submit();
+                saveAndNavigate();
             }, 120000);
 
+            // 2. ユーザーが手動で「次へ」を押したときのバリデーションと保存
             form.addEventListener('submit', function(event) {
-                validateRequiredFields(event, "内容を入力してください。");
+                event.preventDefault(); // デフォルトのGET送信を強制ストップ
+
+                if (!textarea.value.trim()) {
+                    clearFormErrors();
+                    displayFormError(textarea, "内容を入力してください。", textarea.parentNode);
+                    return;
+                }
+
+                saveAndNavigate();
             });
         });
     </script>

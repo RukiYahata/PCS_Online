@@ -49,23 +49,25 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/relay.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            focusFirstRequiredElement(false);
-        });
         document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // デフォルトのGET送信（URL露出）を強制ストップ
+
+            // system.jsのバリデーションを適用
+            // ※system.jsの仕様上、正常時にform.submit()が自動で走る場合は、ここでの判定で手動遷移させます。
             const idInput = document.getElementById('id');
+            if (!idInput.value.trim()) {
+                clearFormErrors();
+                displayFormError(idInput, "プロジェクトIDは必須です。", idInput.parentNode);
+                return;
+            }
 
-            // 1. スペースのみや空欄の入力を厳格にブロック
-            // if (!idInput.value.trim()) {
-            //     event.preventDefault();
-            //     alert("プロジェクトIDを入力してください。");
-            //     idInput.focus();
-            //     return;
-            // }
-            if (!validateRequiredFields(event, "プロジェクトIDは必須です。")) return;
+            // --- セキュリティ改善：URLではなくセッションストレージに保存 ---
+            sessionStorage.clear(); // 新しい実験の開始時に古いキャッシュを完全リセット
+            sessionStorage.setItem('id', idInput.value.trim());
+            sessionStorage.setItem('startTime', getFormattedFormattedTime());
 
-            // 2. 正常に入力されている場合、開始時間をセットしてそのまま標準のGET遷移を通す
-            document.getElementById('startTime').value = getFormattedFormattedTime();
+            // 安全な遷移（URLにパラメーターが付かない）
+            window.location.href = "pages/0_pre01_consent_check.html";
         });
     </script>
 </body>

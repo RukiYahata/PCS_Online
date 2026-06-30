@@ -126,10 +126,29 @@
     <script src="../js/relay.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            focusFirstRequiredElement(false);
+            // focusFirstRequiredElement(false); // ← 自動最下部スクロールを防ぐため削除
         });
+
         document.getElementById('form').addEventListener('submit', function(event) {
-            validateRequiredFields(event, "研究に参加するには同意チェックが必要です。");
+            event.preventDefault(); // デフォルトのGET送信を止める
+
+            // system.js のバリデーションを通過するかチェック
+            // ※validateRequiredFields 内で最終的にform.submit()が走ってしまうのを防ぐため、
+            // チェックボックスの状態を個別にチェックしてsessionStorageに保存し、手動遷移させます。
+            const consentCheck = document.getElementById('consentCheck');
+            if (!consentCheck.checked) {
+                clearFormErrors();
+                displayFormError(consentCheck, "研究に参加するには同意チェックが必要です。", consentCheck.parentNode);
+                return;
+            }
+
+            // 同意フラグを保存
+            sessionStorage.setItem('consent', 'true');
+            // 開始時間を記録（実験全体の所要時間を測るため）
+            sessionStorage.setItem('startTime', new Date().toISOString());
+
+            // 次のページへURLパラメーターなしで遷移
+            window.location.href = "0_pre02_user_information.html";
         });
     </script>
 </body>
