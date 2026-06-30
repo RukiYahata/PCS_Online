@@ -1,89 +1,99 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <title>想像と体験に関する研究 - 実験の終了</title>
-  <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>想像と体験に関する研究 - 実験の終了</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/system.css">
 </head>
+
 <body>
-<div class="container mt-5 text-center">
-  <div class="content_area my-5 no-select">
-    <h1>実験の終了</h1>
-    <div class="my-4 p-4 border rounded bg-light text-start lh-base">
-      <p>この度は、ご協力いただきありがとうございました。下記ボタンを押下し、実験内容をサーバーに送信してください。データ送信をもって実験が完了となります。なおデータ送信後、自動でトップページに戻ります。</p>
+    <div class="container mt-5 text-center">
+        <div class="content_area my-5 no-select">
+            <h1>実験の終了</h1>
+            <div class="my-4 p-4 border rounded bg-light text-start lh-base">
+                <p>この度は、ご協力いただきありがとうございました。下記ボタンを押下し、実験内容をサーバーに送信してください。データ送信をもって実験が完了となります。なおデータ送信後、自動でトップページに戻ります。</p>
+            </div>
+        </div>
+
+        <div id="status_area" class="my-3"></div>
+
+        <div class="form_area">
+            <form id="final_form">
+                <button type="submit" id="submit_btn" class="btn btn-primary btn-lg px-5">データを送信する</button>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <div id="status_area" class="my-3"></div>
+    <script src="../js/system.js"></script>
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/relay.js"></script>
+    <script>
+        document.getElementById('final_form').addEventListener('submit', function(event) {
+            event.preventDefault(); // 通常の送信を抑止
+            disableSubmitButton();
 
-  <div class="form_area">
-    <form id="final_form">
-      <button type="submit" id="submit_btn" class="btn btn-primary btn-lg px-5">データを送信する</button>
-    </form>
-  </div>
-</div>
+            const submitBtn = document.getElementById('submit_btn');
+            const statusArea = document.getElementById('status_area');
 
-<script src="../js/jquery-3.7.1.min.js"></script>
-<script src="../js/bootstrap.bundle.min.js"></script>
-<script src="../js/relay.js"></script>
-<script>
-  document.getElementById('final_form').addEventListener('submit', function(event) {
-    event.preventDefault(); // 通常の送信を抑止
+            // ボタンの二重押し防止
+            submitBtn.disabled = true;
+            statusArea.innerHTML = '<div class="alert alert-info">データを送信中です。そのままお待ちください...</div>';
 
-    const submitBtn = document.getElementById('submit_btn');
-    const statusArea = document.getElementById('status_area');
-    
-    // ボタンの二重押し防止
-    submitBtn.disabled = true;
-    statusArea.innerHTML = '<div class="alert alert-info">データを送信中です。そのままお待ちください...</div>';
+            // 1. URLのクエリパラメータから全ての蓄積データをオブジェクト化
+            const urlParams = new URLSearchParams(window.location.search);
+            const payload = {};
+            urlParams.forEach((value, key) => {
+                payload[key] = value;
+            });
 
-    // 1. URLのクエリパラメータから全ての蓄積データをオブジェクト化
-    const urlParams = new URLSearchParams(window.location.search);
-    const payload = {};
-    urlParams.forEach((value, key) => { payload[key] = value; });
+            // 2. 実験の終了時間 (endTime) を記録
+            const endTimeStr = getFormattedFormattedTime();
+            payload['endTime'] = endTimeStr;
 
-    // 2. 実験の終了時間 (endTime) を記録
-    const endTimeStr = getFormattedFormattedTime();
-    payload['endTime'] = endTimeStr;
+            // 3. 実験所要時間 (duration) を自動計算
+            if (payload['startTime']) {
+                const start = new Date(payload['startTime'].replace(/-/g, '/'));
+                const end = new Date(endTimeStr.replace(/-/g, '/'));
+                const diffMs = end - start;
 
-    // 3. 実験所要時間 (duration) を自動計算
-    if (payload['startTime']) {
-      const start = new Date(payload['startTime'].replace(/-/g, '/'));
-      const end = new Date(endTimeStr.replace(/-/g, '/'));
-      const diffMs = end - start;
-      
-      const diffHrs = Math.floor(diffMs / 3600000);
-      const diffMins = Math.floor((diffMs % 3600000) / 60000);
-      const diffSecs = Math.floor((diffMs % 60000) / 1000);
-      
-      payload['duration'] = `${diffHrs}:${String(diffMins).padStart(2, '0')}:${String(diffSecs).padStart(2, '0')}`;
-    } else {
-      payload['duration'] = "0:00:00";
-    }
+                const diffHrs = Math.floor(diffMs / 3600000);
+                const diffMins = Math.floor((diffMs % 3600000) / 60000);
+                const diffSecs = Math.floor((diffMs % 60000) / 1000);
 
-    // ★ここに取得した「Google Apps Script」のウェブアプリURLを貼り付けます
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzvxpXeEzSPA0AvMM7lTwbh0AxnKGTRg_sOjxeqlak02gU1VQCMcBHns_RSPhGdkE6ApQ/exec'; 
+                payload['duration'] = `${diffHrs}:${String(diffMins).padStart(2, '0')}:${String(diffSecs).padStart(2, '0')}`;
+            } else {
+                payload['duration'] = "0:00:00";
+            }
 
-    // 4. GASへ非同期でPOST一括送信
-    fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors', // GitHub Pagesからのクロスドメイン通信を許可
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(() => {
-      statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。まもなく開始画面へ自動的に戻ります。</div>';
-      setTimeout(function() {
-        // 動的なプロジェクトの最初のルートページ（index.html）へ強制帰還
-        window.location.href = '../index.html';
-      }, 4000);
-    })
-    .catch((error) => {
-      submitBtn.disabled = false;
-      statusArea.innerHTML = '<div class="alert alert-danger">送信エラーが発生しました。インターネット接続を確認の上、再度お試しください。</div>';
-      console.error(error);
-    });
-  });
-</script>
+            // ★ここに取得した「Google Apps Script」のウェブアプリURLを貼り付けます
+            const GAS_URL = 'https://script.google.com/macros/s/AKfycbzvxpXeEzSPA0AvMM7lTwbh0AxnKGTRg_sOjxeqlak02gU1VQCMcBHns_RSPhGdkE6ApQ/exec';
+
+            // 4. GASへ非同期でPOST一括送信
+            fetch(GAS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // GitHub Pagesからのクロスドメイン通信を許可
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。まもなく開始画面へ自動的に戻ります。</div>';
+                    setTimeout(function() {
+                        // 動的なプロジェクトの最初のルートページ（index.html）へ強制帰還
+                        window.location.href = '../index.html';
+                    }, 4000);
+                })
+                .catch((error) => {
+                    submitBtn.disabled = false;
+                    statusArea.innerHTML = '<div class="alert alert-danger">送信エラーが発生しました。インターネット接続を確認の上、再度お試しください。</div>';
+                    console.error(error);
+                });
+        });
+    </script>
 </body>
+
 </html>

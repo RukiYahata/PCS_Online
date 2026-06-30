@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>想像と体験に関する研究 - 同意説明</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/system.css">
     <style>
         .no-select {
             user-select: none;
@@ -27,7 +28,7 @@
             </div>
 
             <div class="custom_paragraph_area">
-                <h2 class="" custom_text_attention "">ご注意ください</h2>
+                <h2 class="custom_text_attention">ご注意ください</h2>
                 <h2>アンケート回答中は、ヘッドホンかイヤホンの装着をお願いします。あらかじめお手元にご用意ください。</h2>
             </div>
 
@@ -119,10 +120,14 @@
         </div>
     </div>
 
+    <script src="../js/system.js"></script>
     <script src="../js/jquery-3.7.1.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/relay.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            focusFirstRequiredElement(false);
+        });
         document.getElementById('form').addEventListener('submit', function(event) {
             validateRequiredFields(event, "研究に参加するには同意チェックが必要です。");
         });
