@@ -49,6 +49,16 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/relay.js"></script>
     <script>
+        function getCustomFormattedTime() {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mi = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd} ${hh}:${mm}:${ss}`;
+        }
         document.getElementById('form').addEventListener('submit', function(event) {
             event.preventDefault(); // デフォルトのGET送信（URL露出）を強制ストップ
 
@@ -64,7 +74,7 @@
             // --- セキュリティ改善：URLではなくセッションストレージに保存 ---
             sessionStorage.clear(); // 新しい実験の開始時に古いキャッシュを完全リセット
             sessionStorage.setItem('id', idInput.value.trim());
-            sessionStorage.setItem('startTime', getFormattedFormattedTime());
+            sessionStorage.setItem('startTime', getCustomFormattedTime());
 
             // 安全な遷移（URLにパラメーターが付かない）
             window.location.href = "pages/0_pre01_consent_check.html";
