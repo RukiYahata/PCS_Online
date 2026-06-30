@@ -1,59 +1,58 @@
 .no-select {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .no-right-click {
-  pointer-events: none;
+    pointer-events: none;
 }
 
 body {
-  font-family: 'Noto Sans JP', sans-serif;
+    font-family: 'Noto Sans JP', sans-serif;
 }
 
 h1 {
-  font-weight: bold;
-  font-size: 24px;
-  text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
 }
 
 h2 {
-  font-weight: bold;
-  font-size: 16px;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 p {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .content_area {
-  margin-top: 100px;
+    margin-top: 100px;
 }
 
 .form_area {
-  padding-top: 70px;
-  padding-bottom: 100px;
-  text-align: center; 
-  /*border-top: 1px solid #dddddd;*/
-  
+    padding-top: 70px;
+    padding-bottom: 100px;
+    text-align: center;
+    /*border-top: 1px solid #dddddd;*/
 }
 
 .custom_text_attention {
-  color: red;
+    color: red;
 }
 
 .custom_text_error_message {
-  text-align: center;
+    text-align: center;
 }
 
 .custom_paragraph_area {
-  margin-top: 50px;
+    margin-top: 50px;
 }
 
 .custom_max_width {
-  max-width: 600px;
+    max-width: 600px;
 }
 
 .custom_checkbox {
@@ -64,7 +63,7 @@ p {
 }
 
 .custom_button {
-  margin-top: 30px;
+    margin-top: 30px;
 }
 
 .form_error_message {
@@ -74,55 +73,54 @@ p {
 }
 
 .custom_radio_button {
-  background-color: #dddddd;
+    background-color: #dddddd;
 }
 
 .custom_radio_label {
-  margin-right: 20px
+    margin-right: 20px
 }
 
-
 .rating-buttons button {
-  margin: 0 5px;
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: background-color 0.3s, border-color 0.3s;
+    margin: 0 5px;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .rating-buttons button.selected {
-  background-color: #007bff;
-  border-color: #007bff;
-  color: white;
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
 }
 
 .rating-buttons button:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-  color: white;
+    background-color: #0056b3;
+    border-color: #0056b3;
+    color: white;
 }
 
 .rating-buttons span {
-  font-size: small;
+    font-size: small;
 }
 
-.checkbox_list_area{
-  width: 200px;
-  text-align: left;
+.checkbox_list_area {
+    width: 200px;
+    text-align: left;
 }
 
-.checkbox_center_area{
-  text-align: center;
+.checkbox_center_area {
+    text-align: center;
 }
 
-#replay_button{
-  margin-top: 30px;
+#replay_button {
+    margin-top: 30px;
 }
 
 .no-spin::-webkit-inner-spin-button,
 .no-spin::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
-    -moz-appearance:textfield;
+    -moz-appearance: textfield;
 }
