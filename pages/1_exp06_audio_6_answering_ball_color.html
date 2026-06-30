@@ -40,16 +40,33 @@
             var audioElement = document.getElementById('audio_element');
             var replayButton = document.getElementById('replay_button');
             var form = document.getElementById('form');
+            var inputField = document.getElementById('ball_color');
 
+            // 音声の自動再生処理（既存の優れたエラーハンドリングを維持）
             audioElement.play().catch(function() {
                 replayButton.style.display = 'block';
             });
+
             replayButton.addEventListener('click', function() {
                 audioElement.play();
             });
 
+            // 送信イベントをフックし、URLではなくメモリ（sessionStorage）へ保存
             form.addEventListener('submit', function(event) {
-                validateRequiredFields(event, "ボールの色を入力してください。");
+                event.preventDefault(); // デフォルトのGET送信（URLへのデータ露出）をストップ
+
+                // 必須入力チェック（空白のみの入力もトリミングして弾く）
+                if (!inputField.value.trim()) {
+                    clearFormErrors();
+                    displayFormError(inputField, "ボールの色を入力してください。", inputField.parentNode);
+                    return;
+                }
+
+                // --- セキュリティ改善：安全にセッションストレージへ格納 ---
+                sessionStorage.setItem('ballColor', inputField.value.trim());
+
+                // パラメーターを付与せず、クリーンなURLのまま次の音声ページへ遷移
+                window.location.href = "1_exp07_audio_7.html";
             });
         });
     </script>
