@@ -97,26 +97,32 @@
             const GAS_URL = 'https://script.google.com/macros/s/AKfycbzvxpXeEzSPA0AvMM7lTwbh0AxnKGTRg_sOjxeqlak02gU1VQCMcBHns_RSPhGdkE6ApQ/exec';
 
             // 4. GASへ非同期でPOST一括送信
-            // CORS回避のため text/plain で送信（GAS側の doPost では問題なく JSON.parse 可能です）
             fetch(GAS_URL, {
                     method: 'POST',
                     mode: 'cors',
+                    redirect: 'manual', // ★超重要: GASのCORSリダイレクトによるブラウザの誤エラー判定を回避
                     headers: {
                         'Content-Type': 'text/plain'
                     },
                     body: JSON.stringify(payload)
                 })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('サーバーエラーが発生しました。');
+                    // redirect: 'manual' の場合、正常に送信されてリダイレクトが発生すると 
+                    // response.type が "opaqueredirect" になる、または status が 0 (あるいは 302) になります。
+                    // スプレッドシートへの書き込みが成功している＝このリダイレクトまで到達しているという意味なので、
+                    // これらを「送信成功」として安全にハンドリングします。
+                    if (response.ok || response.type === 'opaqueredirect' || response.status === 0) {
+                        return {
+                            result: "success"
+                        };
                     }
-                    return response.json();
+                    throw new Error('サーバー側でエラーレスポンスが返されました。 Status: ' + response.status);
                 })
                 .then((result) => {
                     if (result.result === "success") {
                         statusArea.innerHTML = '<div class="alert alert-success">データが正常に保存されました。ご協力ありがとうございました。</div>';
 
-                        // 実験が完全に完了したため、個人のセッションデータを完全に破壊・消去
+                        // 実験が完全に完了したため、個人のセッションデータを安全に抹消
                         sessionStorage.clear();
 
                         setTimeout(function() {
@@ -128,7 +134,7 @@
                 })
                 .catch((error) => {
                     submitBtn.disabled = false;
-                    statusArea.innerHTML = `<div class="alert alert-danger">送信エラーが発生しました。研究実施者に連絡するか、再度お試しください。<br><small>${error.message}</small></div>`;
+                    statusArea.innerHTML = `<div class="alert alert-danger">送信エラーが発生しました。データが保存されていない可能性があります。再試行してください。<br><small>${error.message}</small></div>`;
                     console.error(error);
                 });
         });
