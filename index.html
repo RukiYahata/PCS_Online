@@ -71,10 +71,22 @@
                 return;
             }
 
-            // --- セキュリティ改善：URLではなくセッションストレージに保存 ---
+            // --- セッションストレージに保存 ---
             sessionStorage.clear(); // 新しい実験の開始時に古いキャッシュを完全リセット
             sessionStorage.setItem('id', idInput.value.trim());
-            sessionStorage.setItem('startTime', getCustomFormattedTime());
+            // JST（日本時間）のフォーマット文字列を作成して保存
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mi = String(now.getMinutes()).padStart(2, '0'); // 分（コピペバグ修正済）
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            
+            // スプレッドシート認識用かつ、最後のページでのJSTパース用のフォーマット
+            const formattedJST = `${yyyy}/${mm}/${dd} ${hh}:${mi}:${ss}`;
+            
+            sessionStorage.setItem('startTime', formattedJST);
 
             // 安全な遷移（URLにパラメーターが付かない）
             window.location.href = "pages/0_pre01_consent_check.html";
