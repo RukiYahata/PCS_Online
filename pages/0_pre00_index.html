@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>想像と体験に関する研究 - 開始</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/system.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/system.css">
     <style>
         .no-select {
             user-select: none;
@@ -23,13 +23,13 @@
 </head>
 
 <body>
-    <div class="container xml-container mt-5">
+    <div class="container mt-5">
         <div class="content_area d-flex flex-column align-items-center">
-            <h1 class="no-select no-right-click">「想像と体験に関する研究」</h1>
+            <h1 class="no-select">「想像と体験に関する研究」</h1>
         </div>
-        <div class="form_area mt-4 d-flex flex-column align-items-center">
-            <form action="0_pre01_consent_check.html" method="GET" id="form" novalidate>
 
+        <div class="form_area mt-4 d-flex flex-column align-items-center">
+            <form action="pages/0_pre01_consent_check.html" method="GET" id="form">
                 <div class="custom_paragraph_area">
                     <h2 class="no-select no-right-click">プロジェクトID</h2>
                     <input type="text" class="no-spin form-control text-center" id="id" name="id" required>
@@ -44,15 +44,52 @@
         </div>
     </div>
 
-    <script src="../js/system.js"></script>
-    <script src="../js/jquery-3.7.1.min.js"></script>
-    <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="../js/relay.js"></script>
+    <script src="js/system.js"></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/relay.js"></script>
     <script>
+        function getCustomFormattedTime() {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mi = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd} ${hh}:${mm}:${ss}`;
+        }
         document.getElementById('form').addEventListener('submit', function(event) {
-            if (!validateRequiredFields(event, "プロジェクトIDは必須です。")) return;
-            // 送信直前の時間を実験開始時間として記録
-            document.getElementById('startTime').value = getFormattedFormattedTime();
+            event.preventDefault(); // デフォルトのGET送信（URL露出）を強制ストップ
+
+            // system.jsのバリデーションを適用
+            // ※system.jsの仕様上、正常時にform.submit()が自動で走る場合は、ここでの判定で手動遷移させます。
+            const idInput = document.getElementById('id');
+            if (!idInput.value.trim()) {
+                clearFormErrors();
+                displayFormError(idInput, "プロジェクトIDは必須です。", idInput.parentNode);
+                return;
+            }
+
+            // --- セッションストレージに保存 ---
+            sessionStorage.clear(); // 新しい実験の開始時に古いキャッシュを完全リセット
+            sessionStorage.setItem('id', idInput.value.trim());
+            // JST（日本時間）のフォーマット文字列を作成して保存
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mi = String(now.getMinutes()).padStart(2, '0'); // 分（コピペバグ修正済）
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            
+            // スプレッドシート認識用かつ、最後のページでのJSTパース用のフォーマット
+            const formattedJST = `${yyyy}/${mm}/${dd} ${hh}:${mi}:${ss}`;
+            
+            sessionStorage.setItem('startTime', formattedJST);
+
+            // 安全な遷移（URLにパラメーターが付かない）
+            window.location.href = "pages/0_pre01_consent_check.html";
         });
     </script>
 </body>
