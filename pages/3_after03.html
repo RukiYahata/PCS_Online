@@ -93,17 +93,6 @@
                 payload['duration'] = "0:00:00";
             }
 
-            console.log("===== 時間計算デバッグ =====");
-            console.log("payload.startTime =", payload.startTime);
-            console.log("endTimeStr        =", endTimeStr);
-            console.log("startStr           =", startStr);
-            console.log("endStr             =", endStr);
-            console.log("start              =", start);
-            console.log("end                =", end);
-            console.log("diffMs             =", diffMs);
-            console.log("duration           =", payload.duration);
-            console.log("==========================");
-
             const GAS_URL = 'https://script.google.com/macros/s/AKfycbzvxpXeEzSPA0AvMM7lTwbh0AxnKGTRg_sOjxeqlak02gU1VQCMcBHns_RSPhGdkE6ApQ/exec';
 
             // 4. GASへ非同期でPOST一括送信（成否判定を完全停止）

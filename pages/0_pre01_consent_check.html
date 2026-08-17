@@ -144,8 +144,6 @@
 
             // 同意フラグを保存
             sessionStorage.setItem('consent', 'true');
-            // 開始時間を記録（実験全体の所要時間を測るため）
-            sessionStorage.setItem('startTime', new Date().toISOString());
 
             // 次のページへURLパラメーターなしで遷移
             window.location.href = "0_pre02_user_information.html";
